@@ -145,7 +145,7 @@ void Lcd_send_string (char *str)
 {
 	for(uint8_t i = 0; i < strlen(str); i++){
 		lcd_send_data( str[i]);
-		delay(500);
+		delay(100);
 	}
 
 }

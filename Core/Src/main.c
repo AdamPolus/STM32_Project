@@ -126,8 +126,8 @@ int main(void)
   BMP2_Init(&hbmp2_1);
 
 
-  HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, 1000);
+  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
+//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -148,6 +148,13 @@ int main(void)
 
 	  Lcd_put_cur(1, 0);
 
+	  if (temp >24.00){
+		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 800);
+	  }
+	  else{
+		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 0);
+	  }
+
 //	  printed= a_temp[i];
 	  sprintf (buffer1,"Act temp = %4.02f", (float)temp);
 	  i++;
@@ -156,7 +163,7 @@ int main(void)
 	  }
 
 	  Lcd_send_string(buffer1);
-	  HAL_Delay(500);
+	  HAL_Delay(400);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -355,7 +362,7 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 500;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
