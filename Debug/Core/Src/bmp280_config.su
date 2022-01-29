@@ -1,0 +1,6 @@
+bmp280_config.c:69:8:BMP280_Init	24	static
+bmp280_config.c:112:8:bmp280_spi_reg_write	56	static
+bmp280_config.c:156:8:bmp280_spi_reg_read	88	static
+bmp280_config.c:203:8:BMP280_ReadData	48	static
+bmp280_config.c:223:7:BMP280_ReadTemperature_degC	32	static
+bmp280_config.c:238:7:BMP280_ReadPressure_hPa	32	static
