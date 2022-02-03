@@ -55,7 +55,7 @@ PCD_HandleTypeDef hpcd_USB_OTG_FS;
 /* USER CODE BEGIN PV */
 int row =0;
 int col=0;
-float stemp= 24.56f;
+float stemp;
 char buffer[17];
 
 char buffer1[17];
@@ -67,12 +67,31 @@ int press;
 int n;
 char data_msg[32];
 
+float test;
 
 void Steering__temp (int duty_cycle){
 	if (duty_cycle >=0 && duty_cycle <101){
 		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, duty_cycle*10);
 	}
 }
+
+
+char received_message[5]="";
+void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)
+{
+
+//HAL_UART_Transmit_IT(&huart3, (uint8_t*)received_message, 4);
+HAL_UART_Receive_IT(&huart3, (uint8_t*)received_message, 5);
+sscanf(received_message, "%f", &stemp);
+
+
+}
+//void HAL_UART_TxCpltCallback (UART_HandleTypeDef * huart)
+//{
+//	char data_msg[32];
+//
+//	HAL_UART_Transmit_IT(&huart3, (uint8_t*)n,  0xffff);
+//}
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -132,10 +151,13 @@ int main(void)
 
   BMP2_Init(&hbmp2_1);
 
+  HAL_UART_Receive_IT(&huart3, (uint8_t*)received_message, 5);
 
   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
-  Steering__temp(50);
-//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 000);
+  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_4);
+  Steering__temp(0);
+  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_4, 800);
+//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 00);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -143,10 +165,15 @@ int main(void)
   while (1)
   {
 
+//	  temp =  BMP2_ReadTemperature_degC(&hbmp2_1);
+//	  n = sprintf(data_msg, "Temp: %4.02f \r\n", (float)temp);
+
 	  temp =  BMP2_ReadTemperature_degC(&hbmp2_1);
 	  char data_msg[32];
 	  n = sprintf(data_msg, "Temp: %4.02f \r\n", (float)temp);
 	  HAL_UART_Transmit(&huart3, (uint8_t*)data_msg, n, 0xffff);
+
+	  //sscanf(received_message, "%f", &test);
 
 	  Lcd_clear();
 	  Lcd_put_cur(0, 0);
@@ -374,6 +401,12 @@ static void MX_TIM4_Init(void)
   sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
   }
