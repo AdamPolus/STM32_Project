@@ -66,6 +66,13 @@ float temp;
 int press;
 int n;
 char data_msg[32];
+
+
+void Steering__temp (int duty_cycle){
+	if (duty_cycle >=0 && duty_cycle <101){
+		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, duty_cycle*10);
+	}
+}
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -127,7 +134,8 @@ int main(void)
 
 
   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
-//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 1000);
+  Steering__temp(50);
+//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -148,12 +156,12 @@ int main(void)
 
 	  Lcd_put_cur(1, 0);
 
-	  if (temp >24.00){
-		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 800);
-	  }
-	  else{
-		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 0);
-	  }
+//	  if (temp >24.00){
+//		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 800);
+//	  }
+//	  else{
+//		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 0);
+//	  }
 
 //	  printed= a_temp[i];
 	  sprintf (buffer1,"Act temp = %4.02f", (float)temp);
@@ -363,7 +371,7 @@ static void MX_TIM4_Init(void)
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 500;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
