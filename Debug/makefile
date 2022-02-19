@@ -62,7 +62,7 @@ main-build: STM32_Project.elf secondary-outputs
 
 # Tool invocations
 STM32_Project.elf: $(OBJS) $(USER_OBJS) /home/users/apolus/STM32CubeIDE/workspace_1.7.0/STM32_Project/STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32_Project.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/home/users/apolus/STM32CubeIDE/workspace_1.7.0/STM32_Project/STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32_Project.map" -Wl,--gc-sections -static -u_printf_float -u_scanf_float --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "STM32_Project.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/home/users/apolus/STM32CubeIDE/workspace_1.7.0/STM32_Project/STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32_Project.map" -Wl,--gc-sections -static -L/home/users/apolus/STM32Cube/Repository/Packs/ARM/CMSIS/5.7.0/CMSIS/DSP/Lib/GCC -u_printf_float -u_scanf_float --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

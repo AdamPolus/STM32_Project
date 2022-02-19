@@ -36,7 +36,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pcd_ex.h \
  ../Core/Inc/LCD1602.h ../Core/Inc/bmp2_config.h ../Core/Inc/bmp2.h \
  ../Core/Inc/bmp2_defs.h ../Core/Inc/bmp280_config.h ../Core/Inc/bmp280.h \
- ../Core/Inc/bmp280_defs.h
+ ../Core/Inc/bmp280_defs.h \
+ ../Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/arm_math.h \
+ ../Drivers/CMSIS/Include/cmsis_compiler.h ../Core/Inc/math_helper.h \
+ ../Core/Inc/common.h ../Core/Inc/math_helper.h
 
 ../Core/Inc/main.h:
 
@@ -123,3 +126,13 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/bmp280.h:
 
 ../Core/Inc/bmp280_defs.h:
+
+../Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/arm_math.h:
+
+../Drivers/CMSIS/Include/cmsis_compiler.h:
+
+../Core/Inc/math_helper.h:
+
+../Core/Inc/common.h:
+
+../Core/Inc/math_helper.h:
