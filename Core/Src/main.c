@@ -97,25 +97,17 @@ void Steering_fan (int duty_cycle){
 }
 
 
-//float control_system(float input){
-//	LINEAR_TRANSFORM(input,0,4000,0,100);
-//})
+
 char received_message[5]="";
 void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)
 {
 
-//HAL_UART_Transmit_IT(&huart3, (uint8_t*)received_message, 4);
 HAL_UART_Receive_IT(&huart3, (uint8_t*)received_message, 5);
 sscanf(received_message, "%f", &stemp);
 
 
 }
-//void HAL_UART_TxCpltCallback (UART_HandleTypeDef * huart)
-//{
-//	char data_msg[32];
-//
-//	HAL_UART_Transmit_IT(&huart3, (uint8_t*)n,  0xffff);
-//}
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -146,9 +138,9 @@ int main(void)
 	arm_pid_instance_f32 myp_PID;
 
 
-	myp_PID.Kp = 300;  //100
-	myp_PID.Ki =10.0; //10
-	myp_PID.Kd = 0.00001; //0.01
+	myp_PID.Kp = 200;  //100
+	myp_PID.Ki =0.5; //10
+	myp_PID.Kd = 00.00000000000000000000000001; //0.01
 	arm_pid_init_f32(&myp_PID, 1);
   /* USER CODE END 1 */
 
@@ -186,14 +178,7 @@ int main(void)
 
   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_4);
-//  Steering__temp(100);
-//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_4, 800);
-//  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, 00);
 
-
-//  arm_cmplx_mag_f32(a, &a_amp, 1);
-
-//  Steering__temp(100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -201,15 +186,12 @@ int main(void)
   while (1)
   {
 
-//	  temp =  BMP2_ReadTemperature_degC(&hbmp2_1);
-//	  n = sprintf(data_msg, "Temp: %4.02f \r\n", (float)temp);
 
 	  temp =  BMP2_ReadTemperature_degC(&hbmp2_1);
 	  char data_msg[32];
 	  n = sprintf(data_msg, "Temp: %4.02f \r\n", (float)temp);
 	  HAL_UART_Transmit(&huart3, (uint8_t*)data_msg, n, 0xffff);
 
-	  //sscanf(received_message, "%f", &test);
 
 	  Lcd_clear();
 	  Lcd_put_cur(0, 0);
@@ -227,56 +209,29 @@ int main(void)
 
 	  diff_temp = stemp-temp;
 
-
-
-	  if(diff_temp >= 0.0){
-	  control_signal = arm_pid_f32(&myp_PID, diff_temp);
-	  }
-	  if (diff_temp <0){
-	  control_signal = arm_pid_f32(&myp_PID, -0.01);
-	  }
-
-
-
-	  if(stemp!=prev_stemp){
-		  arm_pid_reset_f32(&myp_PID);
-		  prev_stemp = stemp;
-	  }
-
-
-	  lin_con_sig = LINEAR_TRANSFORM(control_signal,0,5000,0,60);
-//	  if (lin_con_sig >100){
-//		  lin_con_sig=100;
-//	  }
-//	  if (lin_con_sig<0){
-//		  lin_con_sig=0;
-//	  }
-	  if (control_signal>0 && diff_temp>-0.01){
-
-		  Steering__temp(lin_con_sig);
-	  }
-	  if (control_signal<0 || diff_temp<-0.01){
-		  Steering__temp(0.0);
-	  }
-	  if(diff_temp<-0.1){
+	  if(diff_temp<-0.15){
 		  Steering_fan(100);
 	  }
 
 
-	  if(diff_temp>-0.1){
+
+	  if(diff_temp>-0.15){
 	  	  		  Steering_fan(0);
 	  	  	  }
 
-//	  if (stemp > temp+0.5){
-//		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_4, 1000);
-//	  }
-//	  if (stemp > temp+1){
-//		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_4, 1000);
-//	  }
-//	  if (stemp <= temp+1){
-//		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_4, 0);
-//	  }
-//
+
+	  control_signal = 2000 +arm_pid_f32(&myp_PID, diff_temp);
+
+
+
+
+
+
+	  lin_con_sig = LINEAR_TRANSFORM(control_signal,0,5000,0,60);
+
+
+		  Steering__temp(lin_con_sig);
+
 
 
 	  sprintf (buffer1,"Act temp = %4.02f", (float)temp);
